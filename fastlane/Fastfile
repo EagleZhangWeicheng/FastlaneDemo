@@ -17,8 +17,8 @@ default_platform(:ios)
 
 platform :ios do
   desc "ad-hoc 本地打包"
-  lane :adhoc do 
-  gym(scheme: "FastlaneDemo",
+  lane :gymadhoc do
+    gym(scheme: "FastlaneDemo",
       export_method:"ad-hoc",
       output_directory:"./build", # 打包后的 ipa 文件存放的目录
       output_name:"FastlaneDemo",# ipa 文件名
@@ -29,6 +29,37 @@ platform :ios do
                 }
             }
 
-   )
+     )
   end
+
+  lane :beta do
+    sync_code_signing(type: "appstore")
+    build_app(scheme: "FastlaneDemo",
+            export_method:"app-store",
+            workspace: "FastlaneDemo.xcworkspace",
+      output_directory:"./build", # 打包后的 ipa 文件存放的目录
+      export_xcargs: "-allowProvisioningUpdates",  #xcode一直允许使用证书
+            include_bitcode: true)
+    upload_to_testflight
+    slack(message: "Successfully distributed a new beta build")
+  end
+
+  lane:createipa do
+    build_app(scheme: "FastlaneDemo",
+       export_method:"app-store",
+           workspace: "FastlaneDemo.xcworkspace",
+    output_directory:"./build", # 打包后的 ipa 文件存放的目录
+       export_xcargs: "-allowProvisioningUpdates",  #xcode一直允许使用证书
+     include_bitcode: true)
+
+  end
+
+  lane :release do
+    #capture_screenshots                  # generate new screenshots for the App Store
+    sync_code_signing(type: "appstore")  # see code signing guide for more information
+    build_app(scheme: "FastlaneDemo")
+    upload_to_app_store                  # upload your app to App Store Connect
+    slack(message: "Successfully uploaded a new App Store build")
+  end
+
 end

@@ -16,14 +16,24 @@ or alternatively using `brew cask install fastlane`
 
 # Available Actions
 ## iOS
-### ios adhoc
+### ios gymadhoc
 ```
-fastlane ios adhoc
+fastlane ios gymadhoc
 ```
-ad-hoc 打包
-### ios adhoc1
+ad-hoc 本地打包
+### ios beta
 ```
-fastlane ios adhoc1
+fastlane ios beta
+```
+
+### ios createipa
+```
+fastlane ios createipa
+```
+
+### ios release
+```
+fastlane ios release
 ```
 
 
